@@ -6,7 +6,7 @@ services:
       dockerfile: docker/excalidraw/Dockerfile
       args:
         # Excalidraw room endpoint through nginx.
-        VITE_APP_WS_SERVER_URL: "wss://hogefuga.com"
+        VITE_APP_WS_SERVER_URL: "wss://excalidraw.realunivlog.com"
     ports:
       - "127.0.0.1:9247:80"
     restart: unless-stopped
