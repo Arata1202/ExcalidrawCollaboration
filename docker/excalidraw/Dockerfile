@@ -14,9 +14,11 @@ RUN --mount=type=cache,target=/root/.cache/yarn \
     npm_config_target_arch=${TARGETARCH} yarn --frozen-lockfile --network-timeout 600000
 
 ARG NODE_ENV=production
+ARG NODE_OPTIONS=--max-old-space-size=2048
 ARG VITE_APP_WS_SERVER_URL=https://oss-collab.excalidraw.com
 
 ENV NODE_ENV=${NODE_ENV}
+ENV NODE_OPTIONS=${NODE_OPTIONS}
 ENV VITE_APP_WS_SERVER_URL=${VITE_APP_WS_SERVER_URL}
 
 RUN npm_config_target_arch=${TARGETARCH} yarn build:app:docker
