@@ -13,6 +13,7 @@ services:
   excalidraw-room:
     container_name: excalidraw-room
     image: excalidraw/excalidraw-room:latest
+    platform: linux/amd64
     ports:
       - "127.0.0.1:9248:80"
     restart: unless-stopped
