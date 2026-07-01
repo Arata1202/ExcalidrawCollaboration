@@ -1,0 +1,18 @@
+services:
+  excalidraw:
+    container_name: excalidraw-web
+    build:
+      context: .
+      dockerfile: docker/excalidraw/Dockerfile
+      args:
+        # Excalidraw room endpoint through nginx.
+        VITE_APP_WS_SERVER_URL: "wss://hogefuga.com"
+    ports:
+      - "127.0.0.1:9247:80"
+    restart: unless-stopped
+  excalidraw-room:
+    container_name: excalidraw-room
+    image: excalidraw/excalidraw-room:latest
+    ports:
+      - "127.0.0.1:9248:80"
+    restart: unless-stopped
