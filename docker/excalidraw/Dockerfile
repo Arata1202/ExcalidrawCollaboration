@@ -1,16 +1,14 @@
 FROM node:24-slim
 
-WORKDIR /app
+WORKDIR /excalidraw
 
 COPY ./excalidraw .
 
 RUN yarn install --frozen-lockfile
 
-ARG VITE_APP_WS_SERVER_URL=https://oss-collab.excalidraw.com
+ARG VITE_APP_WS_SERVER_URL
 
-RUN NODE_OPTIONS=--max-old-space-size=2048 yarn build:app:docker
-
-USER node
+RUN yarn build:app:docker
 
 EXPOSE 8080
 
