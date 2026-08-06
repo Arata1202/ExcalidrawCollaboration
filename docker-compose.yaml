@@ -2,8 +2,8 @@ services:
   excalidraw:
     container_name: excalidraw
     build:
-      context: .
-      dockerfile: docker/excalidraw/Dockerfile
+      context: ./excalidraw
+      dockerfile: ../docker/excalidraw/Dockerfile
       args:
         VITE_APP_WS_SERVER_URL: "${VITE_APP_WS_SERVER_URL}"
     ports:
@@ -12,7 +12,7 @@ services:
 
   excalidraw-room:
     container_name: excalidraw-room
-    image: excalidraw/excalidraw-room:latest
+    image: excalidraw/excalidraw-room:sha-03ff435
     platform: linux/amd64
     ports:
       - "127.0.0.1:9248:80"
@@ -21,15 +21,13 @@ services:
   nginx:
     container_name: nginx
     build:
-      context: .
-      dockerfile: docker/nginx/Dockerfile
-    profiles:
-      - production
+      context: ./docker/nginx
+      dockerfile: Dockerfile
+    volumes:
+      - /etc/letsencrypt:/etc/letsencrypt:ro
     ports:
       - "80:80"
       - "443:443"
-    volumes:
-      - /etc/letsencrypt:/etc/letsencrypt:ro
     depends_on:
       - excalidraw
       - excalidraw-room

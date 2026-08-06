@@ -2,7 +2,7 @@ FROM node:24-slim
 
 WORKDIR /excalidraw
 
-COPY ./excalidraw .
+COPY . .
 
 RUN yarn install --frozen-lockfile
 
