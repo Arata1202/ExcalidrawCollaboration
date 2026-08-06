@@ -1,6 +1,6 @@
 services:
   excalidraw:
-    container_name: excalidraw-web
+    container_name: excalidraw
     build:
       context: .
       dockerfile: docker/excalidraw/Dockerfile
@@ -9,10 +9,28 @@ services:
     ports:
       - "127.0.0.1:9247:8080"
     restart: unless-stopped
+
   excalidraw-room:
     container_name: excalidraw-room
     image: excalidraw/excalidraw-room:latest
     platform: linux/amd64
     ports:
       - "127.0.0.1:9248:80"
+    restart: unless-stopped
+
+  nginx:
+    container_name: nginx
+    build:
+      context: .
+      dockerfile: docker/nginx/Dockerfile
+    profiles:
+      - production
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+    depends_on:
+      - excalidraw
+      - excalidraw-room
     restart: unless-stopped

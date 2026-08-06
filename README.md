@@ -76,7 +76,7 @@ VITE_APP_WS_SERVER_URL=https://<YOUR_FQDN>
 # VM
 
 # nginx server_name and certificate paths
-vi nginx/default.conf
+vi docker/nginx/default.conf
 ```
 
 ```nginx
@@ -101,21 +101,44 @@ ssl_certificate_key /etc/letsencrypt/live/<YOUR_FQDN>/privkey.pem;
 # Move to repository
 cd ExcalidrawCollaboration
 
-# Set up Ubuntu, Docker, nginx, and certbot
+# Set up Ubuntu, Docker, and certbot
 ./ubuntu/setup.sh
 
 # Issue SSL certificate
 sudo certbot certonly --standalone -d <YOUR_FQDN>
 
-# Start services
-docker compose up -d --build
+# Start services with nginx
+docker compose --profile production up -d --build
+```
 
-# Configure nginx
-sudo cp nginx/default.conf /etc/nginx/sites-available/excalidraw.conf
-sudo ln -sf /etc/nginx/sites-available/excalidraw.conf /etc/nginx/sites-enabled/excalidraw.conf
-sudo rm -f /etc/nginx/sites-enabled/default
-sudo nginx -t
-sudo systemctl reload nginx
+For local development, start the services without the production profile.
+
+```bash
+# Local
+docker compose up -d --build
+```
+
+If nginx was previously installed on the VM, stop it before starting the
+production profile so ports 80 and 443 are available.
+
+```bash
+# VM migration only
+sudo systemctl disable --now nginx
+```
+
+### Renew SSL Certificate
+
+```bash
+# VM
+
+# Release port 80 for certbot
+docker compose --profile production stop nginx
+
+# Renew certificate
+sudo certbot renew
+
+# Start nginx with the renewed certificate
+docker compose --profile production start nginx
 ```
 
 ### Optional Swap
