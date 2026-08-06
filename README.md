@@ -13,6 +13,9 @@ cd ExcalidrawCollaboration
 
 # Prepare submodules
 git submodule update --init --recursive
+
+# Prepare environment variables
+cp .env.example .env
 ```
 
 ### Create Resources with Terraform
@@ -48,21 +51,32 @@ aws ssm start-session --target <EC2_INSTANCE_ID>
 sudo -iu ubuntu
 ```
 
-### Configure Production Values
+### Configure Environment Values
 
 ```bash
 # Local and VM
 
-# Excalidraw room endpoint through nginx
-vi docker-compose.yaml
+# Excalidraw room endpoint
+vi .env
+```
+
+Set the value for the environment where Excalidraw runs.
+
+```dotenv
+# Local
+VITE_APP_WS_SERVER_URL=http://localhost:9248
+
+# Production
+VITE_APP_WS_SERVER_URL=https://<YOUR_FQDN>
+```
+
+### Configure Production Values
+
+```bash
+# VM
 
 # nginx server_name and certificate paths
 vi nginx/default.conf
-```
-
-```yaml
-# Required
-VITE_APP_WS_SERVER_URL: "wss://<YOUR_FQDN>"
 ```
 
 ```nginx
