@@ -11,11 +11,20 @@
 git clone https://github.com/Arata1202/ExcalidrawCollaboration.git
 cd ExcalidrawCollaboration
 
-# Prepare submodules
+# Initialize submodules
 git submodule update --init --recursive
 
-# Prepare environment variables
+# Prepare and edit .env file
 cp .env.example .env
+vi .env
+```
+
+```dotenv
+# Local
+VITE_APP_WS_SERVER_URL=http://localhost:9248
+
+# VM
+VITE_APP_WS_SERVER_URL=https://<YOUR_FQDN>
 ```
 
 ### Create Resources with Terraform
@@ -38,6 +47,8 @@ terraform apply
 
 ### Connect AWS EC2 with SSM
 
+- Default for AWS is SSM.
+
 ```bash
 # Local
 
@@ -51,32 +62,25 @@ aws ssm start-session --target <EC2_INSTANCE_ID>
 sudo -iu ubuntu
 ```
 
-### Configure Environment Values
-
-```bash
-# Local and VM
-
-# Excalidraw room endpoint
-vi .env
-```
-
-Set the value for the environment where Excalidraw runs.
-
-```dotenv
-# Local
-VITE_APP_WS_SERVER_URL=http://localhost:9248
-
-# Production
-VITE_APP_WS_SERVER_URL=https://<YOUR_FQDN>
-```
-
-### Configure Production Values
+### Set Up Excalidraw Server
 
 ```bash
 # VM
 
-# nginx server_name and certificate paths
+# Move to repository
+cd ExcalidrawCollaboration
+
+# Prepare and edit default.conf file
 vi docker/nginx/default.conf
+
+# Set up Ubuntu
+./ubuntu/setup.sh
+
+# Obtain SSL certificate with Let's Encrypt
+sudo certbot certonly --standalone -d <YOUR_FQDN>
+
+# Start server
+docker compose up -d --build
 ```
 
 ```nginx
@@ -92,54 +96,6 @@ ssl_certificate_key /etc/letsencrypt/live/<YOUR_FQDN>/privkey.pem;
 | Record Name | Type | Value                    | TTL |
 | ----------- | ---- | ------------------------ | --- |
 | <YOUR_FQDN> | A    | <VM_PUBLIC_IPV4_ADDRESS> | 300 |
-
-### Set Up Excalidraw Server
-
-```bash
-# VM
-
-# Move to repository
-cd ExcalidrawCollaboration
-
-# Set up Ubuntu, Docker, and certbot
-./ubuntu/setup.sh
-
-# Issue SSL certificate
-sudo certbot certonly --standalone -d <YOUR_FQDN>
-
-# Start services with nginx
-docker compose --profile production up -d --build
-```
-
-For local development, start the services without the production profile.
-
-```bash
-# Local
-docker compose up -d --build
-```
-
-If nginx was previously installed on the VM, stop it before starting the
-production profile so ports 80 and 443 are available.
-
-```bash
-# VM migration only
-sudo systemctl disable --now nginx
-```
-
-### Renew SSL Certificate
-
-```bash
-# VM
-
-# Release port 80 for certbot
-docker compose --profile production stop nginx
-
-# Renew certificate
-sudo certbot renew
-
-# Start nginx with the renewed certificate
-docker compose --profile production start nginx
-```
 
 ### Optional Swap
 
