@@ -1,6 +1,5 @@
 services:
   excalidraw:
-    container_name: excalidraw
     build:
       context: ./excalidraw
       dockerfile: ../docker/excalidraw/Dockerfile
@@ -11,7 +10,6 @@ services:
     restart: unless-stopped
 
   excalidraw-room:
-    container_name: excalidraw-room
     image: excalidraw/excalidraw-room:sha-03ff435
     platform: linux/amd64
     ports:
@@ -19,7 +17,6 @@ services:
     restart: unless-stopped
 
   nginx:
-    container_name: nginx
     build:
       context: ./docker/nginx
       dockerfile: Dockerfile

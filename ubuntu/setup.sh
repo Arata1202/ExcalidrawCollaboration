@@ -4,7 +4,7 @@ ARCH="$(dpkg --print-architecture)"
 
 # Ubuntu
 sudo apt update
-sudo apt install -y ca-certificates curl gnupg certbot qemu-user-static binfmt-support
+sudo apt install -y ca-certificates curl certbot qemu-user-static
 sudo install -m 0755 -d /etc/apt/keyrings
 
 # Docker
