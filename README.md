@@ -77,20 +77,16 @@ vi docker/nginx/default.conf
 ./ubuntu/setup.sh
 
 # Start temporary Nginx for the initial ACME challenge
-docker run --detach --rm \
-  --name certbot-webroot \
-  --publish 80:80 \
-  --volume /var/www/html:/usr/share/nginx/html:ro \
-  nginx:1.30-alpine
+docker run --detach --rm --name certbot-webroot --publish 80:80 --volume /var/www/html:/usr/share/nginx/html nginx:1.30-alpine
 
-# Obtain SSL certificate with Let's Encrypt
+# Obtain the initial TLS certificate from Let's Encrypt
 sudo certbot certonly --webroot -w /var/www/html -d <YOUR_FQDN>
 
-# Stop temporary Nginx
+# Stop and remove temporary Nginx
 docker stop certbot-webroot
 
 # Start server
-docker compose up -d --build
+make up-b
 ```
 
 ```nginx
@@ -106,3 +102,17 @@ ssl_certificate_key /etc/letsencrypt/live/<YOUR_FQDN>/privkey.pem;
 | Record Name | Type | Value                    | TTL |
 | ----------- | ---- | ------------------------ | --- |
 | <YOUR_FQDN> | A    | <VM_PUBLIC_IPV4_ADDRESS> | 300 |
+
+### Renew TLS Certificate
+
+- Nginx must be running.
+
+```bash
+# VM
+
+# Move to repository
+cd ExcalidrawCollaboration
+
+# Renew the TLS certificate if due and reload Nginx afterward
+make renew
+```
