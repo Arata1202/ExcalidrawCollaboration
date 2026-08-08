@@ -4,8 +4,13 @@ ARCH="$(dpkg --print-architecture)"
 
 # Ubuntu
 sudo apt update
-sudo apt install -y ca-certificates curl certbot qemu-user-static
+sudo apt install -y ca-certificates curl extrepo certbot qemu-user-static
 sudo install -m 0755 -d /etc/apt/keyrings
+
+# mise
+sudo extrepo enable mise
+audo apt update
+sudo apt install -y mise
 
 # Docker
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo tee /etc/apt/keyrings/docker.asc > /dev/null
