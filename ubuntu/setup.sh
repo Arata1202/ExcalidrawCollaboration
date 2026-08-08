@@ -9,7 +9,7 @@ sudo install -m 0755 -d /etc/apt/keyrings
 
 # mise
 sudo extrepo enable mise
-audo apt update
+sudo apt update
 sudo apt install -y mise
 
 # Docker
