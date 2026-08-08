@@ -76,8 +76,18 @@ vi docker/nginx/default.conf
 # Set up Ubuntu
 ./ubuntu/setup.sh
 
+# Start temporary Nginx for the initial ACME challenge
+docker run --detach --rm \
+  --name certbot-webroot \
+  --publish 80:80 \
+  --volume /var/www/html:/usr/share/nginx/html:ro \
+  nginx:1.30-alpine
+
 # Obtain SSL certificate with Let's Encrypt
-sudo certbot certonly --standalone -d <YOUR_FQDN>
+sudo certbot certonly --webroot -w /var/www/html -d <YOUR_FQDN>
+
+# Stop temporary Nginx
+docker stop certbot-webroot
 
 # Start server
 docker compose up -d --build
