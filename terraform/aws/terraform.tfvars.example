@@ -1,6 +1,6 @@
 region = "ap-northeast-1"
 ami = "ami-038e94aea55c0f480"
-instance_type = "t4g.small"
+instance_type = "t4g.medium"
 volume_type = "gp3"
 volume_size = 20
 volume_encrypted = true
