@@ -106,16 +106,3 @@ ssl_certificate_key /etc/letsencrypt/live/<YOUR_FQDN>/privkey.pem;
 | Record Name | Type | Value                    | TTL |
 | ----------- | ---- | ------------------------ | --- |
 | <YOUR_FQDN> | A    | <VM_PUBLIC_IPV4_ADDRESS> | 300 |
-
-### Optional Swap
-
-```bash
-# VM
-
-# Use this only for low-memory instances.
-sudo fallocate -l 4G /swapfile
-sudo chmod 600 /swapfile
-sudo mkswap /swapfile
-sudo swapon /swapfile
-grep -q '^/swapfile ' /etc/fstab || echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
-```
