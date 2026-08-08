@@ -1,6 +1,6 @@
 ## Getting Started
 
-- This guide supports AWS EC2 with Terraform.
+- This guide supports both AWS EC2 and Azure VM with Terraform.
 
 ### Prepare Repository
 
@@ -33,7 +33,8 @@ VITE_APP_WS_SERVER_URL=https://<YOUR_FQDN>
 # Local
 
 # Move to repository
-cd ExcalidrawCollaboration/terraform
+cd ExcalidrawCollaboration
+cd terraform/aws # or terraform/azure
 
 # Prepare and edit local values
 cp terraform.tfvars.example terraform.tfvars
@@ -60,6 +61,35 @@ aws ssm start-session --target <EC2_INSTANCE_ID>
 
 # Switch to ubuntu user
 sudo -iu ubuntu
+```
+
+### Configure SSH Access
+
+- Default for Azure is SSH (Azure Bastion can be costly).
+
+```bash
+# Local
+
+# Save the VM private key
+vi ~/.ssh/excalidraw_key.pem
+chmod 600 ~/.ssh/excalidraw_key.pem
+
+# Configure SSH host aliases
+vi ~/.ssh/config
+```
+
+```sshconfig
+Host excalidraw
+  HostName <VM_PUBLIC_IPV4_ADDRESS>
+  User ubuntu
+  IdentityFile ~/.ssh/excalidraw_key.pem
+```
+
+```bash
+# Local
+
+# Connect to VM via SSH
+ssh excalidraw
 ```
 
 ### Set Up Excalidraw Server
