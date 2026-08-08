@@ -4,7 +4,7 @@ services:
       context: ./excalidraw
       dockerfile: ../docker/excalidraw/Dockerfile
       args:
-        VITE_APP_WS_SERVER_URL: "${VITE_APP_WS_SERVER_URL}"
+        VITE_APP_WS_SERVER_URL: "${VITE_APP_WS_SERVER_URL:?VITE_APP_WS_SERVER_URL is not set}"
     ports:
       - "127.0.0.1:9247:80"
     restart: unless-stopped
