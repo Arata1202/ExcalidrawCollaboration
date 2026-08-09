@@ -107,7 +107,7 @@ vi docker/nginx/default.conf
 ./ubuntu/setup.sh
 
 # Start temporary Nginx for the initial ACME challenge
-docker run --detach --rm --name certbot-webroot --publish 80:80 --volume /var/www/html:/usr/share/nginx/html nginx:1.30-alpine
+docker run --detach --rm --name certbot-webroot --publish 80:80 --volume /var/www/html:/usr/share/nginx/html nginx:1.30.4-alpine-slim
 
 # Obtain the initial TLS certificate from Let's Encrypt
 sudo certbot certonly --webroot -w /var/www/html -d <YOUR_FQDN>
