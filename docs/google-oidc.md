@@ -16,7 +16,7 @@
      - Redirect URI: `https://<YOUR_FQDN>/oauth2/callback`
 6. Create the client, then copy the Client ID and Client Secret immediately and store them securely
 
-With the current `OAUTH2_PROXY_EMAIL_DOMAINS=*` setting in `docker-compose.yaml`, a published External app permits any Google account to authenticate. Use Internal, keep the app in testing mode with explicit test users, or change this setting to restrict the allowed email domains when access must be limited.
+When `OAUTH2_PROXY_EMAIL_DOMAINS=*`, a published External app permits any Google account to authenticate. Use Internal, keep the app in testing mode with explicit test users, or change this setting to restrict the allowed email domains when access must be limited.
 
 Add the following values to `.env` during initial setup. For an existing server, follow the **Update Configuration** section in the main README.
 
