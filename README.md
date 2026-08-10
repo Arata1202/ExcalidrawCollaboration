@@ -92,6 +92,23 @@ Host excalidraw
 ssh excalidraw
 ```
 
+### Set Up GitHub Actions
+
+1. Configure GitHub Actions secrets for `deploy.yml` and `renew.yml`
+
+> [!NOTE]
+> These workflows require direct SSH access and are not compatible with the default AWS SSM setup.
+
+```env
+# Required
+SSH_HOST=<VM_PUBLIC_IPV4_ADDRESS>
+SSH_USERNAME=ubuntu
+SSH_PRIVATE_KEY=<SSH_PRIVATE_KEY>
+```
+
+2. Run the `deploy` workflow manually from GitHub Actions to apply repository changes to the VM
+3. Run the `renew` workflow manually from GitHub Actions to renew the TLS certificate when needed
+
 ### Set Up Microsoft Entra ID OIDC
 
 For Google OIDC, see [Set Up Google OIDC](docs/google-oidc.md).
