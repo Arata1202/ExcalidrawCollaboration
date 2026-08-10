@@ -4,8 +4,12 @@ ARCH="$(dpkg --print-architecture)"
 
 # Ubuntu
 sudo apt update
-sudo apt install -y ca-certificates curl make certbot qemu-user-static
+sudo apt install -y ca-certificates curl gnupg make certbot qemu-user-static
 sudo install -m 0755 -d /etc/apt/keyrings
+
+# Node.js
+curl -fsSL https://deb.nodesource.com/setup_24.x | sudo -E bash -
+sudo apt install -y nodejs
 
 # Docker
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo tee /etc/apt/keyrings/docker.asc > /dev/null

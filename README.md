@@ -8,7 +8,7 @@ This guide deploys the complete stack to either AWS EC2 or an Azure VM using Ter
 
 ### Prerequisites
 
-- Git and Terraform
+- Git, Make, Node.js 24, npm, Docker, and Terraform
 - AWS: AWS CLI and the Session Manager plugin
 - Azure: Azure CLI and OpenSSH
 - A domain whose DNS records you can configure
@@ -24,7 +24,21 @@ cd ExcalidrawCollaboration
 
 # Initialize submodules
 git submodule update --init --recursive
+
+# Install dependencies
+npm install
 ```
+
+### Start Excalidraw Locally
+
+```bash
+# Local
+
+# Start local services
+make up-b-dev
+```
+
+Access Excalidraw at `http://localhost:9247`.
 
 ### Create Resources with Terraform
 
@@ -145,6 +159,9 @@ git submodule update --init --recursive
 # Set up Ubuntu
 ./ubuntu/setup.sh
 
+# Install dependencies
+npm install
+
 # Prepare .env file
 cp .env.example .env
 ```
@@ -224,9 +241,14 @@ Edit `.env` with your preferred editor and configure all required values listed 
 ```bash
 # VM
 
-# Build images and start all services
-make up-b
+# Encrypt .env file
+make encrypt
+
+# Start all services
+make up-b-prod
 ```
+
+Back up `.env.keys` securely after the first encryption. It is required to decrypt `.env` and must never be committed.
 
 Access Excalidraw at `https://<YOUR_FQDN>`.
 
@@ -268,6 +290,9 @@ make renew
 
 # Move to repository
 cd ~/ExcalidrawCollaboration
+
+# Decrypt .env file
+make decrypt
 ```
 
 Edit `.env` with your preferred editor. Edit `docker/nginx/default.conf.template` only when customizing the Nginx configuration itself.
@@ -275,6 +300,9 @@ Edit `.env` with your preferred editor. Edit `docker/nginx/default.conf.template
 ```bash
 # VM
 
-# Rebuild images and recreate services
-make up-b
+# Encrypt .env file
+make encrypt
+
+# Restart services
+make up-b-prod
 ```

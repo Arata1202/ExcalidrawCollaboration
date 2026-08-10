@@ -1,0 +1,13 @@
+{
+  "name": "excalidraw-collaboration",
+  "private": true,
+  "dependencies": {
+    "@dotenvx/dotenvx": "^1.51.4"
+  },
+  "devDependencies": {
+    "husky": "^9.1.7"
+  },
+  "scripts": {
+    "prepare": "husky"
+  }
+}

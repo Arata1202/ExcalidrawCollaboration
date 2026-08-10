@@ -1,4 +1,6 @@
-.env
+node_modules/
+.env.backup_*
+.env.keys
 **/.terraform/*
 *.tfstate
 *.tfstate.*

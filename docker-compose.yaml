@@ -4,7 +4,7 @@ services:
       context: ./excalidraw
       dockerfile: ../docker/excalidraw/Dockerfile
       args:
-        VITE_APP_WS_SERVER_URL: "https://${DOMAIN:?DOMAIN is not set}"
+        VITE_APP_WS_SERVER_URL: http://localhost:9248
     ports:
       - "127.0.0.1:9247:80"
     restart: unless-stopped
@@ -14,41 +14,4 @@ services:
     platform: linux/amd64
     ports:
       - "127.0.0.1:9248:80"
-    restart: unless-stopped
-
-  nginx:
-    build:
-      context: ./docker/nginx
-      dockerfile: Dockerfile
-    environment:
-      DOMAIN: "${DOMAIN:?DOMAIN is not set}"
-      DISABLE_ANONYMOUS: "${DISABLE_ANONYMOUS:?DISABLE_ANONYMOUS is not set}"
-      NGINX_ENVSUBST_FILTER: "^(DOMAIN|AUTH_REQUEST)$"
-    volumes:
-      - /etc/letsencrypt:/etc/letsencrypt
-      - /var/www/html:/var/www/html
-    ports:
-      - "80:80"
-      - "443:443"
-    depends_on:
-      - excalidraw
-      - excalidraw-room
-      - oauth2-proxy
-    restart: unless-stopped
-
-  oauth2-proxy:
-    image: quay.io/oauth2-proxy/oauth2-proxy:v7.15.3
-    environment:
-      OAUTH2_PROXY_PROVIDER: "${OAUTH2_PROXY_PROVIDER:?OAUTH2_PROXY_PROVIDER is not set}"
-      OAUTH2_PROXY_CLIENT_ID: "${OAUTH2_PROXY_CLIENT_ID:?OAUTH2_PROXY_CLIENT_ID is not set}"
-      OAUTH2_PROXY_CLIENT_SECRET: "${OAUTH2_PROXY_CLIENT_SECRET:?OAUTH2_PROXY_CLIENT_SECRET is not set}"
-      OAUTH2_PROXY_OIDC_ISSUER_URL: "${OAUTH2_PROXY_OIDC_ISSUER_URL:?OAUTH2_PROXY_OIDC_ISSUER_URL is not set}"
-      OAUTH2_PROXY_REDIRECT_URL: "https://${DOMAIN:?DOMAIN is not set}/oauth2/callback"
-      OAUTH2_PROXY_SCOPE: "${OAUTH2_PROXY_SCOPE:?OAUTH2_PROXY_SCOPE is not set}"
-      OAUTH2_PROXY_COOKIE_SECRET: "${OAUTH2_PROXY_COOKIE_SECRET:?OAUTH2_PROXY_COOKIE_SECRET is not set}"
-      OAUTH2_PROXY_EMAIL_DOMAINS: "${OAUTH2_PROXY_EMAIL_DOMAINS:?OAUTH2_PROXY_EMAIL_DOMAINS is not set}"
-      OAUTH2_PROXY_HTTP_ADDRESS: 0.0.0.0:4180
-      OAUTH2_PROXY_REVERSE_PROXY: "true"
-      OAUTH2_PROXY_SESSION_COOKIE_MINIMAL: "true"
-      OAUTH2_PROXY_SKIP_PROVIDER_BUTTON: "true"
     restart: unless-stopped

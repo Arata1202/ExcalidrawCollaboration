@@ -1,3 +1,5 @@
+DR := npx dotenvx run --
+
 define REQUIRED_P
 	@set -e; \
 	if [ -z "$(strip $(P))" ]; then \
@@ -27,39 +29,46 @@ endef
 
 # Docker
 
-DC := docker compose
+DEV_DC := docker compose
+PROD_DC := docker compose -f docker-compose.yaml -f docker-compose.production.yaml
 
 exec:
 	$(REQUIRED_P)
-	@${DC} exec $(P) sh
+	@${DR} ${PROD_DC} exec $(P) sh
 
-up:
-	$(OPTIONAL_P)
-	@${DC} up -d $(P)
+up-b-dev:
+	@${DEV_DC} up -d --build $(P)
 
-up-b:
-	$(OPTIONAL_P)
-	@${DC} up -d --build $(P)
+up-b-prod:
+	@${DR} ${PROD_DC} up -d --build $(P)
 
 stop:
 	$(OPTIONAL_P)
-	@${DC} stop $(P)
+	@${DR} ${PROD_DC} stop $(P)
 
 restart:
 	$(OPTIONAL_P)
-	@${DC} restart $(P)
+	@${DR} ${PROD_DC} restart $(P)
 
 logs:
 	$(OPTIONAL_P)
-	@${DC} logs -f $(P)
+	@${DR} ${PROD_DC} logs -f $(P)
 
 ps:
 	$(OPTIONAL_P)
-	@${DC} ps -a $(P)
+	@${DR} ${PROD_DC} ps -a $(P)
+
+# Dotenvx
+
+encrypt:
+	@npx dotenvx encrypt
+
+decrypt:
+	@npx dotenvx decrypt
 
 # Nginx
 
 renew:
-	@sudo certbot renew --deploy-hook 'docker compose exec -T nginx nginx -s reload'
+	@sudo certbot renew --deploy-hook 'npx dotenvx run -- docker compose -f docker-compose.yaml -f docker-compose.production.yaml exec -T nginx nginx -s reload'
 
-.PHONY: exec up up-b stop restart logs ps renew
+.PHONY: exec up-b-dev up-b-prod stop restart logs ps encrypt decrypt renew
