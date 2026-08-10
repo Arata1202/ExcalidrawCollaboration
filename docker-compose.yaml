@@ -22,7 +22,8 @@ services:
       dockerfile: Dockerfile
     environment:
       DOMAIN: "${DOMAIN:?DOMAIN is not set}"
-      NGINX_ENVSUBST_FILTER: "DOMAIN"
+      DISABLE_ANONYMOUS: "${DISABLE_ANONYMOUS:?DISABLE_ANONYMOUS is not set}"
+      NGINX_ENVSUBST_FILTER: "^(DOMAIN|AUTH_REQUEST)$"
     volumes:
       - /etc/letsencrypt:/etc/letsencrypt
       - /var/www/html:/var/www/html

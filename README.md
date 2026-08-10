@@ -154,7 +154,10 @@ cp .env.example .env
 ```env
 # Required
 DOMAIN=<YOUR_FQDN>
+DISABLE_ANONYMOUS=true
 ```
+
+Set `DISABLE_ANONYMOUS=false` only when anonymous access should be allowed.
 
 ### Configure OIDC
 

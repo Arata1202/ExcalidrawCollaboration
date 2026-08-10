@@ -43,7 +43,7 @@ server {
     }
 
     location /socket.io/ {
-        auth_request /oauth2/auth;
+        auth_request ${AUTH_REQUEST};
 
         proxy_pass http://excalidraw-room:80;
 
@@ -52,7 +52,7 @@ server {
     }
 
     location / {
-        auth_request /oauth2/auth;
+        auth_request ${AUTH_REQUEST};
         error_page 401 = @oauth2_signin;
 
         gzip on;

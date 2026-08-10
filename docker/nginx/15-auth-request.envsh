@@ -1,0 +1,14 @@
+#!/bin/sh
+
+case "${DISABLE_ANONYMOUS:-}" in
+    true)
+        export AUTH_REQUEST=/oauth2/auth
+        ;;
+    false)
+        export AUTH_REQUEST=off
+        ;;
+    *)
+        echo >&2 "DISABLE_ANONYMOUS must be either true or false"
+        exit 1
+        ;;
+esac
