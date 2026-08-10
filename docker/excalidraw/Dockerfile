@@ -2,7 +2,7 @@ FROM --platform=${BUILDPLATFORM} node:24.18.0 AS build
 
 WORKDIR /opt/node_app
 
-COPY package.json yarn.lock ./
+COPY package.json yarn.lock .npmrc ./
 COPY excalidraw-app/package.json ./excalidraw-app/
 COPY packages/common/package.json ./packages/common/
 COPY packages/element/package.json ./packages/element/
