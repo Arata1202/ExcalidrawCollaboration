@@ -153,10 +153,8 @@ cp .env.example .env
 
 ```env
 # Required
-VITE_APP_WS_SERVER_URL=https://<YOUR_FQDN>
+DOMAIN=<YOUR_FQDN>
 ```
-
-Replace every occurrence of `excalidraw.realunivlog.com` in `docker/nginx/default.conf` with your FQDN.
 
 ### Configure OIDC
 
@@ -244,7 +242,7 @@ SSH_USERNAME=ubuntu
 SSH_PRIVATE_KEY=<SSH_PRIVATE_KEY>
 ```
 
-- Run the `deploy` workflow manually to pull repository changes, rebuild images, and start the services on the VM.
+- Run the `deploy` workflow manually to pull repository and submodule changes, rebuild images, and start the services on the VM.
 - Run the `renew` workflow manually to renew the TLS certificate when due and reload Nginx.
 
 ### Renew TLS Certificate
@@ -270,7 +268,7 @@ make renew
 cd ~/ExcalidrawCollaboration
 ```
 
-Edit `.env` or `docker/nginx/default.conf` with your preferred editor.
+Edit `.env` with your preferred editor. Edit `docker/nginx/default.conf.template` only when customizing the Nginx configuration itself.
 
 ```bash
 # VM

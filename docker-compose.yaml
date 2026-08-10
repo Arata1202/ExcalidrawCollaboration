@@ -4,7 +4,7 @@ services:
       context: ./excalidraw
       dockerfile: ../docker/excalidraw/Dockerfile
       args:
-        VITE_APP_WS_SERVER_URL: "${VITE_APP_WS_SERVER_URL:?VITE_APP_WS_SERVER_URL is not set}"
+        VITE_APP_WS_SERVER_URL: "https://${DOMAIN:?DOMAIN is not set}"
     ports:
       - "127.0.0.1:9247:80"
     restart: unless-stopped
@@ -20,6 +20,9 @@ services:
     build:
       context: ./docker/nginx
       dockerfile: Dockerfile
+    environment:
+      DOMAIN: "${DOMAIN:?DOMAIN is not set}"
+      NGINX_ENVSUBST_FILTER: "DOMAIN"
     volumes:
       - /etc/letsencrypt:/etc/letsencrypt
       - /var/www/html:/var/www/html
