@@ -1,6 +1,6 @@
 # Excalidraw Collaboration
 
-Self-hosted Excalidraw with real-time collaboration, Nginx, OAuth2 Proxy, and Let's Encrypt TLS.
+Self-hosted Excalidraw frontend and real-time collaboration room with Nginx, OAuth2 Proxy, and Let's Encrypt TLS. The upstream production configuration continues to use Excalidraw's default Firebase and API services.
 
 ## Getting Started
 
@@ -189,7 +189,6 @@ OAUTH2_PROXY_PROVIDER=entra-id
 OAUTH2_PROXY_CLIENT_ID=<APPLICATION_CLIENT_ID>
 OAUTH2_PROXY_CLIENT_SECRET=<CLIENT_SECRET_VALUE>
 OAUTH2_PROXY_OIDC_ISSUER_URL=https://login.microsoftonline.com/<DIRECTORY_TENANT_ID>/v2.0
-OAUTH2_PROXY_REDIRECT_URL=https://<YOUR_FQDN>/oauth2/callback
 OAUTH2_PROXY_SCOPE=openid
 OAUTH2_PROXY_COOKIE_SECRET=<GENERATED_COOKIE_SECRET>
 ```
