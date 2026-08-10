@@ -1,32 +1,24 @@
 # Set Up Google OIDC
 
-1. Access Google Cloud Platform
-2. Create a new project
-3. Go to APIs & Services -> OAuth consent screen
+1. Access the [Google Cloud console](https://console.cloud.google.com/) and create or select a project
+2. Go to Google Auth Platform -> Overview and select Get started if prompted
+3. Go to Google Auth Platform -> Branding and configure the application
    - App name: Excalidraw
    - User support email: <EMAIL_ADDRESS>
-   - User Type: Internal
    - Contact Information: <EMAIL_ADDRESS>
-4. Go to APIs & Services -> Credentials
-5. Create OAuth client ID
+4. Go to Google Auth Platform -> Audience
+   - User type: Internal when the project belongs to a Google Cloud Organization; otherwise External
+   - Add test users when using External in testing mode
+5. Go to Google Auth Platform -> Clients -> Create client
    - Application type: Web application
    - Name: Excalidraw
    - Authorized redirect URIs
      - Redirect URI: `https://<YOUR_FQDN>/oauth2/callback`
-6. Save the Client ID and Client Secret
+6. Create the client, then copy the Client ID and Client Secret immediately and store them securely
 
-```bash
-# VM
+With the current `OAUTH2_PROXY_EMAIL_DOMAINS=*` setting in `docker-compose.yaml`, a published External app permits any Google account to authenticate. Use Internal, keep the app in testing mode with explicit test users, or change this setting to restrict the allowed email domains when access must be limited.
 
-# Move to repository
-cd ExcalidrawCollaboration
-
-# Generate the OAuth2 Proxy cookie secret
-openssl rand -base64 32 | tr -- '+/' '-_'
-
-# Edit .env file
-vi .env
-```
+Add the following values to `.env` during initial setup. For an existing server, follow the **Update Configuration** section in the main README.
 
 ```env
 # Required
