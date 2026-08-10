@@ -7,29 +7,15 @@ server {
     listen 80;
     server_name ${DOMAIN};
 
-    location /.well-known/acme-challenge/ {
-        root /var/www/html;
-    }
-
-    location / {
-        return 301 https://${DOMAIN}$request_uri;
-    }
-}
-
-server {
-    listen 443 ssl;
-    http2 on;
-    server_name ${DOMAIN};
-
-    ssl_certificate /etc/letsencrypt/live/${DOMAIN}/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/${DOMAIN}/privkey.pem;
-
     location /oauth2/ {
         proxy_pass http://oauth2-proxy:4180;
 
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Auth-Request-Redirect $scheme://$host$request_uri;
+        proxy_set_header X-Forwarded-Proto https;
+        proxy_set_header X-Forwarded-Host $host;
+        proxy_set_header X-Forwarded-Uri $request_uri;
+        proxy_set_header X-Auth-Request-Redirect https://$host$request_uri;
     }
 
     location = /oauth2/auth {
@@ -37,6 +23,8 @@ server {
 
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-Proto https;
+        proxy_set_header X-Forwarded-Host $host;
         proxy_set_header X-Forwarded-Uri $request_uri;
         proxy_set_header Content-Length "";
         proxy_pass_request_body off;
@@ -62,6 +50,6 @@ server {
     }
 
     location @oauth2_signin {
-        return 302 /oauth2/sign_in?rd=$scheme://$host$request_uri;
+        return 302 /oauth2/sign_in?rd=https://$host$request_uri;
     }
 }

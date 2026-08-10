@@ -16,12 +16,18 @@ services:
       DOMAIN: "${DOMAIN:?DOMAIN is not set}"
       DISABLE_ANONYMOUS: "${DISABLE_ANONYMOUS:?DISABLE_ANONYMOUS is not set}"
       NGINX_ENVSUBST_FILTER: "^(DOMAIN|AUTH_REQUEST)$"
-    volumes:
-      - /etc/letsencrypt:/etc/letsencrypt:ro
-      - /var/www/html:/var/www/html:ro
-    ports:
-      - "80:80"
-      - "443:443"
+    networks:
+      - default
+      - proxy
+    labels:
+      traefik.enable: "true"
+      traefik.docker.network: workadventure-proxy
+      traefik.http.routers.excalidraw.rule: "Host(`${DOMAIN}`)"
+      traefik.http.routers.excalidraw.entryPoints: websecure
+      traefik.http.routers.excalidraw.tls: "true"
+      traefik.http.routers.excalidraw.tls.certresolver: myresolver
+      traefik.http.routers.excalidraw.service: excalidraw-nginx
+      traefik.http.services.excalidraw-nginx.loadbalancer.server.port: "80"
     depends_on:
       - excalidraw
       - excalidraw-room
@@ -44,3 +50,8 @@ services:
       OAUTH2_PROXY_SESSION_COOKIE_MINIMAL: "true"
       OAUTH2_PROXY_SKIP_PROVIDER_BUTTON: "true"
     restart: unless-stopped
+
+networks:
+  proxy:
+    external: true
+    name: workadventure-proxy

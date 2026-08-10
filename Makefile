@@ -31,6 +31,7 @@ endef
 
 DEV_DC := docker compose
 PROD_DC := docker compose -f docker-compose.yaml -f docker-compose.production.yaml
+PROXY_NETWORK := workadventure-proxy
 
 exec:
 	$(REQUIRED_P)
@@ -42,6 +43,7 @@ up-b-dev:
 
 up-b-prod:
 	$(OPTIONAL_P)
+	@docker network inspect ${PROXY_NETWORK} > /dev/null 2>&1 || docker network create ${PROXY_NETWORK}
 	@${DR} ${PROD_DC} up -d --build $(P)
 
 stop:
@@ -68,9 +70,4 @@ encrypt:
 decrypt:
 	@npx dotenvx decrypt
 
-# Nginx
-
-renew:
-	@sudo certbot renew --deploy-hook 'npx dotenvx run -- docker compose -f docker-compose.yaml -f docker-compose.production.yaml exec -T nginx nginx -s reload'
-
-.PHONY: exec up-b-dev up-b-prod stop restart logs ps encrypt decrypt renew
+.PHONY: exec up-b-dev up-b-prod stop restart logs ps encrypt decrypt
