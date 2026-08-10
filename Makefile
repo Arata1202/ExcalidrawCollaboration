@@ -37,9 +37,11 @@ exec:
 	@${DR} ${PROD_DC} exec $(P) sh
 
 up-b-dev:
+	$(OPTIONAL_P)
 	@${DEV_DC} up -d --build $(P)
 
 up-b-prod:
+	$(OPTIONAL_P)
 	@${DR} ${PROD_DC} up -d --build $(P)
 
 stop:

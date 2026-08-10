@@ -3,6 +3,10 @@ services:
     build:
       args:
         VITE_APP_WS_SERVER_URL: "https://${DOMAIN:?DOMAIN is not set}"
+    ports: !reset []
+
+  excalidraw-room:
+    ports: !reset []
 
   nginx:
     build:
@@ -13,8 +17,8 @@ services:
       DISABLE_ANONYMOUS: "${DISABLE_ANONYMOUS:?DISABLE_ANONYMOUS is not set}"
       NGINX_ENVSUBST_FILTER: "^(DOMAIN|AUTH_REQUEST)$"
     volumes:
-      - /etc/letsencrypt:/etc/letsencrypt
-      - /var/www/html:/var/www/html
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+      - /var/www/html:/var/www/html:ro
     ports:
       - "80:80"
       - "443:443"
