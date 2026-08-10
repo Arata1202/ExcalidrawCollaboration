@@ -92,6 +92,47 @@ Host excalidraw
 ssh excalidraw
 ```
 
+### Set Up Microsoft Entra ID OIDC
+
+For Google OIDC, see [Set Up Google OIDC](docs/google-oidc.md).
+
+1. Access Microsoft Azure portal
+2. Go to Microsoft Entra ID -> App registrations
+3. Create a new registration
+   - Name: Excalidraw
+   - Supported account types: Accounts in this organizational directory only
+   - Platform: Web
+   - Redirect URI: `https://<YOUR_FQDN>/oauth2/callback`
+4. Open Certificates & secrets and create a new client secret
+5. Save the following values
+   - Application (client) ID
+   - Directory (tenant) ID
+   - Client secret Value (not the Secret ID)
+
+```bash
+# VM
+
+# Move to repository
+cd ExcalidrawCollaboration
+
+# Generate the OAuth2 Proxy cookie secret
+openssl rand -base64 32 | tr -- '+/' '-_'
+
+# Edit .env file
+vi .env
+```
+
+```env
+# Required
+OAUTH2_PROXY_PROVIDER=entra-id
+OAUTH2_PROXY_CLIENT_ID=<APPLICATION_CLIENT_ID>
+OAUTH2_PROXY_CLIENT_SECRET=<CLIENT_SECRET_VALUE>
+OAUTH2_PROXY_OIDC_ISSUER_URL=https://login.microsoftonline.com/<DIRECTORY_TENANT_ID>/v2.0
+OAUTH2_PROXY_REDIRECT_URL=https://<YOUR_FQDN>/oauth2/callback
+OAUTH2_PROXY_SCOPE=openid
+OAUTH2_PROXY_COOKIE_SECRET=<GENERATED_COOKIE_SECRET>
+```
+
 ### Set Up Excalidraw Server
 
 ```bash
