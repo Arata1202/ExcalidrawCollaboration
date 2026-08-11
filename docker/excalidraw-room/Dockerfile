@@ -10,11 +10,9 @@ RUN --mount=type=cache,target=/root/.cache/yarn \
 COPY tsconfig.json ./
 COPY src ./src
 
-RUN yarn build
-
 ENV NODE_ENV=production
 
-EXPOSE 80
+RUN yarn build
 
 HEALTHCHECK CMD wget -q -O /dev/null http://localhost || exit 1
 
