@@ -8,10 +8,10 @@
 
 - This guide supports both AWS EC2 and Azure VM with Terraform.
 
-### Prepare Repository
+### Prepare Local Repository
 
 ```bash
-# Local and VM
+# Local
 
 # Clone repository
 git clone https://github.com/Arata1202/ExcalidrawCollaboration.git
@@ -22,22 +22,29 @@ git submodule update --init --recursive
 
 # Install dependencies
 npm install
-
-# Prepare and edit .env file
-cp .env.example .env
-vi .env
 ```
 
-```dotenv
+### Start Excalidraw Locally
+
+```bash
 # Local
-VITE_APP_WS_SERVER_URL=http://localhost:9248
 
-# VM
-DOMAIN=<YOUR_FQDN>
-VITE_APP_WS_SERVER_URL=https://<YOUR_FQDN>
+# Move to repository
+cd ExcalidrawCollaboration
+
+# Start local services
+make up-b-dev
 ```
+
+Access Excalidraw at `http://localhost:9247`.
 
 ### Create Resources with Terraform
+
+When using Azure, generate an SSH key first:
+
+```bash
+ssh-keygen -t ed25519 -C "excalidraw" -f ~/.ssh/excalidraw -N ""
+```
 
 ```bash
 # Local
@@ -55,6 +62,8 @@ terraform init
 terraform plan
 terraform apply
 ```
+
+For Azure, set `ssh_public_key` in `terraform.tfvars` to the contents of `~/.ssh/excalidraw.pub`. The SSH key is not used by the default AWS SSM configuration.
 
 ### Connect AWS EC2 with SSM
 
@@ -77,22 +86,11 @@ sudo -iu ubuntu
 
 - Default for Azure is SSH (Azure Bastion can be costly).
 
-```bash
-# Local
-
-# Save the VM private key
-vi ~/.ssh/excalidraw_key.pem
-chmod 600 ~/.ssh/excalidraw_key.pem
-
-# Configure SSH host aliases
-vi ~/.ssh/config
-```
-
 ```sshconfig
 Host excalidraw
   HostName <VM_PUBLIC_IPV4_ADDRESS>
   User ubuntu
-  IdentityFile ~/.ssh/excalidraw_key.pem
+  IdentityFile ~/.ssh/excalidraw
 ```
 
 ```bash
@@ -102,12 +100,40 @@ Host excalidraw
 ssh excalidraw
 ```
 
+### Prepare VM Repository
+
+```bash
+# VM
+
+# Clone repository
+git clone https://github.com/Arata1202/ExcalidrawCollaboration.git
+cd ExcalidrawCollaboration
+
+# Initialize submodules
+git submodule update --init --recursive
+
+# Set up Ubuntu
+./ubuntu/setup.sh
+
+# Install dependencies
+npm install
+```
+
+### Configure DNS
+
+Add an A record in your DNS provider before obtaining the TLS certificate.
+
+| Record Name | Type | Value                    | TTL |
+| ----------- | ---- | ------------------------ | --- |
+| <YOUR_FQDN> | A    | <VM_PUBLIC_IPV4_ADDRESS> | 300 |
+
 ### Set Up GitHub Actions
 
 1. Configure GitHub Actions secrets for `deploy.yml` and `renew.yml`
 
 > [!NOTE]
 > These workflows require direct SSH access and are not compatible with the default AWS SSM setup.
+> The VM must already contain the repository, encrypted `.env`, and matching `.env.keys`.
 
 ```env
 # Required
@@ -142,6 +168,9 @@ For Google OIDC, see [Set Up Google OIDC](docs/google-oidc.md).
 # Move to repository
 cd ExcalidrawCollaboration
 
+# Prepare .env file
+cp .env.example .env
+
 # Generate the OAuth2 Proxy cookie secret
 openssl rand -base64 32 | tr -- '+/' '-_'
 
@@ -151,6 +180,7 @@ vi .env
 
 ```env
 # Required
+DOMAIN=<YOUR_FQDN>
 OAUTH2_PROXY_PROVIDER=entra-id
 OAUTH2_PROXY_CLIENT_ID=<APPLICATION_CLIENT_ID>
 OAUTH2_PROXY_CLIENT_SECRET=<CLIENT_SECRET_VALUE>
@@ -167,9 +197,6 @@ OAUTH2_PROXY_EMAIL_DOMAINS=<ALLOWED_EMAIL_DOMAIN>
 
 # Move to repository
 cd ExcalidrawCollaboration
-
-# Set up Ubuntu
-./ubuntu/setup.sh
 
 # Start temporary Nginx for the initial ACME challenge
 docker run --detach --rm --name certbot-webroot --publish 80:80 --volume /var/www/html:/usr/share/nginx/html nginx:1.30.4-alpine-slim
@@ -189,11 +216,24 @@ make up-b-prod
 
 Back up `.env.keys` securely. It is required to decrypt `.env` and must not be committed.
 
-1. Add an A record in your DNS provider to point your domain to the VM public IP.
+Access Excalidraw at `https://<YOUR_FQDN>`.
 
-| Record Name | Type | Value                    | TTL |
-| ----------- | ---- | ------------------------ | --- |
-| <YOUR_FQDN> | A    | <VM_PUBLIC_IPV4_ADDRESS> | 300 |
+### Update Configuration
+
+```bash
+# VM
+
+# Move to repository
+cd ExcalidrawCollaboration
+
+# Decrypt and edit .env
+make decrypt
+vi .env
+
+# Encrypt .env and restart services
+make encrypt
+make up-b-prod
+```
 
 ### Renew TLS Certificate
 
