@@ -145,22 +145,9 @@ SSH_PRIVATE_KEY=<SSH_PRIVATE_KEY>
 2. Run the `deploy` workflow manually from GitHub Actions to apply repository changes to the VM
 3. Run the `renew` workflow manually from GitHub Actions to renew the TLS certificate when needed
 
-### Set Up Microsoft Entra ID OIDC
+### Prepare OIDC Environment
 
-For Google OIDC, see [Set Up Google OIDC](docs/google-oidc.md).
-
-1. Access Microsoft Azure portal
-2. Go to Microsoft Entra ID -> App registrations
-3. Create a new registration
-   - Name: Excalidraw
-   - Supported account types: Accounts in this organizational directory only
-   - Platform: Web
-   - Redirect URI: `https://<YOUR_FQDN>/oauth2/callback`
-4. Open Certificates & secrets and create a new client secret
-5. Save the following values
-   - Application (client) ID
-   - Directory (tenant) ID
-   - Client secret Value (not the Secret ID)
+Complete these steps before configuring Microsoft Entra ID or Google OIDC.
 
 ```bash
 # VM
@@ -181,12 +168,33 @@ vi .env
 ```env
 # Required
 DOMAIN=<YOUR_FQDN>
+OAUTH2_PROXY_COOKIE_SECRET=<GENERATED_COOKIE_SECRET>
+```
+
+Next, configure one OIDC provider. To use Google, see [Set Up Google OIDC](docs/google-oidc.md).
+
+### Set Up Microsoft Entra ID OIDC
+
+1. Access Microsoft Azure portal
+2. Go to Microsoft Entra ID -> App registrations
+3. Create a new registration
+   - Name: Excalidraw
+   - Supported account types: Accounts in this organizational directory only
+   - Platform: Web
+   - Redirect URI: `https://<YOUR_FQDN>/oauth2/callback`
+4. Open Certificates & secrets and create a new client secret
+5. Save the following values
+   - Application (client) ID
+   - Directory (tenant) ID
+   - Client secret Value (not the Secret ID)
+
+```env
+# Required
 OAUTH2_PROXY_PROVIDER=entra-id
 OAUTH2_PROXY_CLIENT_ID=<APPLICATION_CLIENT_ID>
 OAUTH2_PROXY_CLIENT_SECRET=<CLIENT_SECRET_VALUE>
 OAUTH2_PROXY_OIDC_ISSUER_URL=https://login.microsoftonline.com/<DIRECTORY_TENANT_ID>/v2.0
 OAUTH2_PROXY_SCOPE=openid
-OAUTH2_PROXY_COOKIE_SECRET=<GENERATED_COOKIE_SECRET>
 OAUTH2_PROXY_EMAIL_DOMAINS=<ALLOWED_EMAIL_DOMAIN>
 ```
 
