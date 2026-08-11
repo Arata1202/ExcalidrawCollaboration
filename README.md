@@ -1,3 +1,9 @@
+<div align="right">
+
+![GitHub License](https://img.shields.io/github/license/Arata1202/ExcalidrawCollaboration)
+
+</div>
+
 ## Getting Started
 
 - This guide supports both AWS EC2 and Azure VM with Terraform.

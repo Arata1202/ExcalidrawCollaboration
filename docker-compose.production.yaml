@@ -14,7 +14,6 @@ services:
       dockerfile: Dockerfile
     environment:
       DOMAIN: "${DOMAIN:?DOMAIN is not set}"
-      NGINX_ENVSUBST_FILTER: "DOMAIN"
     volumes:
       - /etc/letsencrypt:/etc/letsencrypt
       - /var/www/html:/var/www/html
