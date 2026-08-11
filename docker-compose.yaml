@@ -10,8 +10,9 @@ services:
     restart: unless-stopped
 
   excalidraw-room:
-    image: excalidraw/excalidraw-room:sha-03ff435
-    platform: linux/amd64
+    build:
+      context: ./excalidraw-room
+      dockerfile: ../docker/excalidraw-room/Dockerfile
     ports:
       - "127.0.0.1:9248:80"
     restart: unless-stopped
