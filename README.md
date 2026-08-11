@@ -188,6 +188,8 @@ Next, configure one OIDC provider. To use Google, see [Set Up Google OIDC](docs/
    - Directory (tenant) ID
    - Client secret Value (not the Secret ID)
 
+Add the following values to `.env`.
+
 ```env
 # Required
 OAUTH2_PROXY_PROVIDER=entra-id
