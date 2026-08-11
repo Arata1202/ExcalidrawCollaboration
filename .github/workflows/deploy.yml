@@ -21,4 +21,4 @@ jobs:
             cd ~/ExcalidrawCollaboration
             git pull --ff-only
             git submodule update --init --recursive
-            yes y | make up-b-prod
+            yes y | make up-b E=prod

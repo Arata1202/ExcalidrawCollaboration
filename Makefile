@@ -1,5 +1,15 @@
 DR := npx dotenvx run --
 
+define REQUIRED_E
+	@set -e; \
+	if [ "$(E)" != "dev" ] && [ "$(E)" != "prod" ]; then \
+		echo ""; \
+		echo "ERROR: Invalid E."; \
+		echo "Usage: make $(MAKECMDGOALS) E=<dev|prod>"; \
+		exit 1; \
+	fi
+endef
+
 define REQUIRED_P
 	@set -e; \
 	if [ -z "$(strip $(P))" ]; then \
@@ -30,35 +40,38 @@ endef
 # Docker
 
 DEV_DC := docker compose
-PROD_DC := docker compose -f docker-compose.yaml -f docker-compose.production.yaml
+PROD_DC := ${DR} docker compose -f docker-compose.yaml -f docker-compose.production.yaml
+DC = $(if $(filter prod,$(E)),${PROD_DC},${DEV_DC})
 
 exec:
+	$(REQUIRED_E)
 	$(REQUIRED_P)
-	@${DR} ${PROD_DC} exec $(P) sh
+	@${DC} exec $(P) sh
 
-up-b-dev:
+up-b:
+	$(REQUIRED_E)
 	$(OPTIONAL_P)
-	@${DEV_DC} up -d --build $(P)
-
-up-b-prod:
-	$(OPTIONAL_P)
-	@${DR} ${PROD_DC} up -d --build $(P)
+	@${DC} up -d --build $(P)
 
 stop:
+	$(REQUIRED_E)
 	$(OPTIONAL_P)
-	@${DR} ${PROD_DC} stop $(P)
+	@${DC} stop $(P)
 
 restart:
+	$(REQUIRED_E)
 	$(OPTIONAL_P)
-	@${DR} ${PROD_DC} restart $(P)
+	@${DC} restart $(P)
 
 logs:
+	$(REQUIRED_E)
 	$(OPTIONAL_P)
-	@${DR} ${PROD_DC} logs -f $(P)
+	@${DC} logs -f $(P)
 
 ps:
+	$(REQUIRED_E)
 	$(OPTIONAL_P)
-	@${DR} ${PROD_DC} ps -a $(P)
+	@${DC} ps -a $(P)
 
 # Dotenvx
 
@@ -73,4 +86,4 @@ decrypt:
 renew:
 	@sudo certbot renew --deploy-hook 'npx dotenvx run -- docker compose -f docker-compose.yaml -f docker-compose.production.yaml exec -T nginx nginx -s reload'
 
-.PHONY: exec up-b-dev up-b-prod stop restart logs ps encrypt decrypt renew
+.PHONY: exec up-b stop restart logs ps encrypt decrypt renew

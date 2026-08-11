@@ -33,7 +33,7 @@ npm install
 cd ExcalidrawCollaboration
 
 # Start local services
-make up-b-dev
+make up-b E=dev
 ```
 
 Access Excalidraw at `http://localhost:9247`.
@@ -221,7 +221,7 @@ docker stop certbot-webroot
 make encrypt
 
 # Start server
-make up-b-prod
+make up-b E=prod
 ```
 
 Back up `.env.keys` securely. It is required to decrypt `.env` and must not be committed.
@@ -242,7 +242,7 @@ vi .env
 
 # Encrypt .env and restart services
 make encrypt
-make up-b-prod
+make up-b E=prod
 ```
 
 ### Renew TLS Certificate
