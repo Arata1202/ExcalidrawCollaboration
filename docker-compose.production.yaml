@@ -16,8 +16,8 @@ services:
       DOMAIN: "${DOMAIN:?DOMAIN is not set}"
       NGINX_ENVSUBST_FILTER: "DOMAIN"
     volumes:
-      - /etc/letsencrypt:/etc/letsencrypt:ro
-      - /var/www/html:/var/www/html:ro
+      - /etc/letsencrypt:/etc/letsencrypt
+      - /var/www/html:/var/www/html
     ports:
       - "80:80"
       - "443:443"
