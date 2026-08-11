@@ -16,7 +16,7 @@
      - Redirect URI: `https://<YOUR_FQDN>/oauth2/callback`
 6. Create the client, then copy the Client ID and Client Secret immediately and store them securely
 
-When `OAUTH2_PROXY_EMAIL_DOMAINS=*`, a published External app permits any Google account to authenticate. Use Internal, keep the app in testing mode with explicit test users, or change this setting to restrict the allowed email domains when access must be limited.
+Set `OAUTH2_PROXY_EMAIL_DOMAINS` to the domains that may sign in. Using `*` with a published External app permits any Google account to authenticate; use Internal, keep the app in testing mode with explicit test users, or restrict the allowed domains when access must be limited.
 
 Add the following values to `.env` during initial setup. For an existing server, follow the **Update Configuration** section in the main README.
 
