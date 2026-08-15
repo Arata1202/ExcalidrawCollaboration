@@ -121,11 +121,12 @@ npm install
 
 ### Configure DNS
 
-Add an A record in your DNS provider before obtaining the TLS certificate.
+Add A records in your DNS provider before obtaining the TLS certificate.
 
-| Record Name | Type | Value                    | TTL |
-| ----------- | ---- | ------------------------ | --- |
-| <YOUR_FQDN> | A    | <VM_PUBLIC_IPV4_ADDRESS> | 300 |
+| Record Name     | Type | Value                    | TTL |
+| --------------- | ---- | ------------------------ | --- |
+| <YOUR_FQDN>     | A    | <VM_PUBLIC_IPV4_ADDRESS> | 300 |
+| <YOUR_MCP_FQDN> | A    | <VM_PUBLIC_IPV4_ADDRESS> | 300 |
 
 ### Set Up GitHub Actions
 
@@ -168,6 +169,7 @@ vi .env
 ```env
 # Required
 DOMAIN=<YOUR_FQDN>
+MCP_DOMAIN=<YOUR_MCP_FQDN>
 OAUTH2_PROXY_COOKIE_SECRET=<GENERATED_COOKIE_SECRET>
 ```
 
@@ -212,7 +214,7 @@ cd ExcalidrawCollaboration
 docker run --detach --rm --name certbot-webroot --publish 80:80 --volume /var/www/html:/usr/share/nginx/html nginx:1.30.4-alpine-slim
 
 # Obtain the initial TLS certificate from Let's Encrypt
-sudo certbot certonly --webroot -w /var/www/html -d <YOUR_FQDN>
+sudo certbot certonly --webroot -w /var/www/html --cert-name <YOUR_FQDN> -d <YOUR_FQDN> -d <YOUR_MCP_FQDN>
 
 # Stop and remove temporary Nginx
 docker stop certbot-webroot

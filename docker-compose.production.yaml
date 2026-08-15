@@ -17,6 +17,7 @@ services:
       dockerfile: Dockerfile
     environment:
       DOMAIN: "${DOMAIN:?DOMAIN is not set}"
+      MCP_DOMAIN: "${MCP_DOMAIN:?MCP_DOMAIN is not set}"
     volumes:
       - /etc/letsencrypt:/etc/letsencrypt
       - /var/www/html:/var/www/html

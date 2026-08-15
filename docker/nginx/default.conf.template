@@ -5,14 +5,14 @@ map $http_upgrade $connection_upgrade {
 
 server {
     listen 80;
-    server_name ${DOMAIN};
+    server_name ${DOMAIN} ${MCP_DOMAIN};
 
     location /.well-known/acme-challenge/ {
         root /var/www/html;
     }
 
     location / {
-        return 301 https://${DOMAIN}$request_uri;
+        return 301 https://$host$request_uri;
     }
 }
 
@@ -42,10 +42,6 @@ server {
         proxy_pass_request_body off;
     }
 
-    location = /mcp {
-        proxy_pass http://excalidraw-mcp:3001/mcp;
-    }
-
     location /socket.io/ {
         auth_request /oauth2/auth;
 
@@ -67,5 +63,18 @@ server {
 
     location @oauth2_signin {
         return 302 /oauth2/sign_in?rd=$scheme://$host$request_uri;
+    }
+}
+
+server {
+    listen 443 ssl;
+    http2 on;
+    server_name ${MCP_DOMAIN};
+
+    ssl_certificate /etc/letsencrypt/live/${DOMAIN}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/${DOMAIN}/privkey.pem;
+
+    location = /mcp {
+        proxy_pass http://excalidraw-mcp:3001/mcp;
     }
 }
