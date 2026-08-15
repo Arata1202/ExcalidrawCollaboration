@@ -16,3 +16,16 @@ services:
     ports:
       - "127.0.0.1:9248:80"
     restart: unless-stopped
+
+  excalidraw-mcp:
+    build:
+      context: ./excalidraw-mcp
+      dockerfile: ../docker/excalidraw-mcp/Dockerfile
+    ports:
+      - "127.0.0.1:9250:3001"
+    volumes:
+      - excalidraw-mcp-checkpoints:/tmp/excalidraw-mcp-checkpoints
+    restart: unless-stopped
+
+volumes:
+  excalidraw-mcp-checkpoints:

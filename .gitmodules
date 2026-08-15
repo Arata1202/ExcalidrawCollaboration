@@ -4,3 +4,6 @@
 [submodule "excalidraw-room"]
 	path = excalidraw-room
 	url = https://github.com/excalidraw/excalidraw-room.git
+[submodule "excalidraw-mcp"]
+	path = excalidraw-mcp
+	url = https://github.com/excalidraw/excalidraw-mcp.git

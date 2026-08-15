@@ -42,6 +42,10 @@ server {
         proxy_pass_request_body off;
     }
 
+    location = /mcp {
+        proxy_pass http://excalidraw-mcp:3001/mcp;
+    }
+
     location /socket.io/ {
         auth_request /oauth2/auth;
 

@@ -8,6 +8,9 @@ services:
   excalidraw-room:
     ports: !reset []
 
+  excalidraw-mcp:
+    ports: !reset []
+
   nginx:
     build:
       context: ./docker/nginx
@@ -23,6 +26,7 @@ services:
     depends_on:
       - excalidraw
       - excalidraw-room
+      - excalidraw-mcp
       - oauth2-proxy
     restart: unless-stopped
 
