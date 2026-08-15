@@ -38,6 +38,8 @@ make up-b E=dev
 
 Access Excalidraw at `http://localhost:9247`.
 
+Connect an MCP client to `http://127.0.0.1:9250/mcp`.
+
 ### Create Resources with Terraform
 
 When using Azure, generate an SSH key first:
@@ -173,6 +175,8 @@ MCP_DOMAIN=<YOUR_MCP_FQDN>
 OAUTH2_PROXY_COOKIE_SECRET=<GENERATED_COOKIE_SECRET>
 ```
 
+Set `DOMAIN` and `MCP_DOMAIN` to hostnames without a URL scheme or path.
+
 Next, configure one OIDC provider. To use Google, see [Set Up Google OIDC](docs/google-oidc.md).
 
 ### Set Up Microsoft Entra ID OIDC
@@ -229,6 +233,11 @@ make up-b E=prod
 Back up `.env.keys` securely. It is required to decrypt `.env` and must not be committed.
 
 Access Excalidraw at `https://<YOUR_FQDN>`.
+
+Connect an MCP client to `https://<YOUR_MCP_FQDN>/mcp`.
+
+> [!NOTE]
+> OIDC protects the Excalidraw domain only. The MCP endpoint is served without authentication to match the [upstream open-source Excalidraw MCP server](https://github.com/excalidraw/excalidraw-mcp).
 
 ### Update Configuration
 
